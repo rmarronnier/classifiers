@@ -146,7 +146,8 @@ module Cadmium
           @state_space.each_with_index do |_, j|
             best_probability = -1.7976931348623157e+308
             best_path = 0
-            @state_space.each_with_index do |_, k|
+            k = 0
+            @state_space.each.take_while do |_|
               probability = t1[k, i - 1] + Math.log(@transition_matrix[k, j]) + Math.log(@emission_matrix[j, lookup_table.fetch(token, 0)])
               if probability > best_probability
                 best_probability = probability
@@ -154,6 +155,8 @@ module Cadmium
               end
               t1[j, i] = best_probability
               t2[j, i] = best_path
+              k = k + 1
+              best_probability < 0.8
             end
           end
         end
